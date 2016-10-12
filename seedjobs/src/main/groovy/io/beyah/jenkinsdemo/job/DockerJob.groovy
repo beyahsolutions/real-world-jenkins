@@ -35,7 +35,7 @@ class DockerJob {
   private def pipelineCode() {
     return """
       node('docker') {
-        checkout([\$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: '${repoUrl}']]])
+        checkout([\$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: '${repoUrl()}']]])
 
         stage 'Build'
         def image = docker.build()
