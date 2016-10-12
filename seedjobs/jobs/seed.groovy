@@ -2,14 +2,14 @@ def seedJobs = [
   [
       name: 'gradle',
       ownerAndProject: 'beyahsolutions/real-world-jenkins',
-      dslScripts: 'jobs/seed/gradle.groovy',
+      dslScripts: 'seedjobs/jobs/seed/gradle.groovy',
       credentialId: 'git',
       protocol: 'https'
   ],
   [
       name: 'docker',
       ownerAndProject: 'beyahsolutions/real-world-jenkins',
-      dslScripts: 'jobs/seed/docker.groovy',
+      dslScripts: 'seedjobs/jobs/seed/docker.groovy',
       credentialId: 'git',
       protocol: 'https'
   ]
