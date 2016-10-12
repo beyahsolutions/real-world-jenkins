@@ -30,7 +30,7 @@ seedJobs.each { jobConfig ->
     steps {
       gradle {
         switches('clean build')
-        rootBuildScriptDir('seed_jobs')
+        rootBuildScriptDir('seedjobs')
       }
       dsl {
         external(jobConfig['dslScripts'])
