@@ -28,13 +28,10 @@ seedJobs.each { jobConfig ->
       }
     }
     steps {
-      gradle {
-        switches('clean build')
-        rootBuildScriptDir('seedjobs')
-      }
       dsl {
         external(jobConfig['dslScripts'])
         additionalClasspath 'src/main/groovy\nlib'
+        removeAction('DELETE')
       }
     }
   }
