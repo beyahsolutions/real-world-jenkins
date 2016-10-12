@@ -30,7 +30,7 @@ seedJobs.each { jobConfig ->
     steps {
       dsl {
         external(jobConfig['dslScripts'])
-        additionalClasspath 'src/main/groovy\nlib'
+        additionalClasspath 'seedjobs/src/main/groovy'
         removeAction('DELETE')
       }
     }
