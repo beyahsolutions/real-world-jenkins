@@ -1,0 +1,19 @@
+---
+version: '2'
+services:
+  master:
+    build: master
+    ports:
+      - "8080:8080"
+    expose:
+      - "50000"
+  agent:
+    build: agent
+    depends_on:
+      - master
+    volumes:
+      - ./fixtures:/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./tmp:/workspace
+      - /tmp:/tmp

@@ -1,0 +1,69 @@
+import jenkins.model.*;
+
+
+/**
+* Expected Format:
+* {
+*   "agent_port": <port>(50000),
+*   "executors": <count>(0),
+*   "users": {
+*     "<username>": {
+*       "email": "<user@host.com>",
+*       "public_key": "<ssh-rsa key description>"
+*     }
+*   }
+* }
+*/
+
+def config = [
+  agent_port: 50000,
+  executors: 2,
+  users: [
+    admin: [
+      email: "do-not-reply@nowhere.com",
+      public_keys: [
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCUAmoj8cyMVtHJ8du17wtwoCSVFGstA4oE+SXDrHD73EsqUC0DP65wyqOv9Td4qcUAm01GYuIYabx5PmksefpCNuYupPOoGl9E+BDHb3c1rhvXNXKkJaif3NCqlUVWTtcdRTOLEYR66TlR4+Z+MpTpKRM94rD8JEfoyjtyrZOw9lzpUZ6HHfrrOtjdczDMklT1DL4OUtP+rLoiLIIP6XdpJRshZ553Loq/mGzszh/dypj2hpN2Yo0XCDZylNQanh0e58SwNM/bdhMH4rUfowOlP9JI13iVUrsCvGw6mdhWC0gYBv6wO4E2cCrvRm6VkGVfn9lu81+8h8AMfaUo+0p7 stub"
+      ],
+      "full_name": "Jenkins Administrator",
+      "password": "jenkins4lyfe"
+    ]
+  ]
+]
+
+/* lockdown jenkins */
+def authorizationStrategy = new hudson.security.FullControlOnceLoggedInAuthorizationStrategy()
+authorizationStrategy.setAllowAnonymousRead(false)
+
+def securityRealm = new hudson.security.HudsonPrivateSecurityRealm(false) /* disable signup */
+
+jenkins.model.Jenkins jenkins = Jenkins.instance
+jenkins.setSecurityRealm(securityRealm)
+jenkins.setAuthorizationStrategy(authorizationStrategy)
+jenkins.setSlaveAgentPort(config.agent_port)
+jenkins.setNumExecutors(config.executors)
+jenkins.save()
+
+/**
+*  https://github.com/chef-cookbooks/jenkins/blob/master/libraries/user.rb
+*/
+config.users.each { username, user_data ->
+  println "--> creating user: $username"
+
+  def user = hudson.model.User.get(username)
+  user.setFullName(user_data.full_name)
+
+  if (jenkins.model.Jenkins.instance.pluginManager.getPlugin('mailer')) {
+    propertyClass = this.class.classLoader.loadClass('hudson.tasks.Mailer$UserProperty')
+    email = propertyClass.newInstance(user_data.email)
+    user.addProperty(email)
+  }
+
+  if (user_data['password'] != null) {
+    password = hudson.security.HudsonPrivateSecurityRealm.Details.fromPlainPassword(user_data.password)
+    user.addProperty(password)
+  }
+
+  def keys = new org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl(user_data.public_keys.join('\n'))
+  user.addProperty(keys)
+  user.save()
+}

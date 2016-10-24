@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Real-World Jenkins</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<img data-src="img/jenkins.png" />
+					<h2>Real-World Jenkins</h2>
+					<p>Antonio Beyah</p>
+				</section>
+				<section>
+					<h2>Overview</h2>
+					<ul>
+						<li>Introduction</li>
+						<li>Welcome to Jenkins</li>
+						<li>Jenkins Deep Dive</li>
+						<li>Demo/Questions</li>
+					</ul>
+				</section>
+				<section>
+					<section><h2>Introduction</h2></section>
+					<section>
+						<h2>Who I Am</h2>
+						<ul>
+							<li>Cloud Engineer:
+								<q>Software Engineer focused on cloud technologies, specializing in automation.</q>
+							</li>
+							<li>
+								Primarily in retail industry (development and operations)
+								<ul>
+									<li>Best Buy (Cashier, Geek Squad, Geeksquad.com, BestBuy.com)</li>
+									<li>SPS Commerce (Cloud Engineering)</li>
+									<li>Target (Independent Consultant, Cloud Platform Engineering)</li>
+								</ul>
+							</li>
+							<li>Long time Jenkins user</li>
+						</ul>
+					</section>
+					<section>
+						<h2>What The Presentation Is About</h2>
+						<ul>
+							<li>Best Practices</li>
+							<li>Common Pitfalls</li>
+							<li>Administration</li>
+							<li>Monitoring and Scaling</li>
+							<li>Introduction to Jenkins Ecosystem</li>
+						</ul>
+					</section>
+					<section>
+						<h2>What This Talk Is <em>Not</em> About</h2>
+						<ul>
+							<li>Code Deep Dive (Stapler, Remoting, Plugin Development)</li>
+							<li>Specific Automation Tools (Chef, Puppet, Ansible, etc)</li>
+							<li>Specific Cloud Platforms (AWS, GCP, esp. not Azure)</li>
+							<li>Windows<span class="fragment">(Ok, maybe an honorable mention)</span></li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Welcome to Jenkins</h2>
+						<img data-src="img/jenkins_screenshot.png" />
+					</section>
+					<section>
+						<h2>What is Jenkins?</h2>
+						<p>According to <em>jenkins.io</em>:
+							<blockquote cite="https://jenkins.io">
+								"The leading open source automation server, Jenkins provides hundreds of plugins to support building, deploying and automating any project."
+							</blockquote>
+						</p>
+						<p>According to <em>me</em>:
+							<blockquote>
+								"A mature platform that allows you to get stuff done."
+							</blockquote>
+						</p>
+					</section>
+					<section>
+						<h2>Use Cases</h2>
+						<ul>
+							<li>Build Server: Checking out code from SCM, builds the pieces, runs the unit tests, reports feedback.</li>
+							<li>CI/CD Server: Build Server + spinning up an environment and testing it</li>
+							<li>Cron/Batch Replacement: Checking out code from SCM, builds the pieces, runs the unit tests, reports feedback.</li>
+							<li class="fragment">Excuse Eliminator: Independent, unbiased, and accepting of new work</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Key Information / Architecture</h2>
+						<ul>
+							<li>Written in Java, Heavily tied to Groovy</li>
+							<li>Uses a <em>Master</em> and <em>Agent</em> model</li>
+							<ul>
+								<li>Master (connect)-> Agent (JNLP)</li>
+								<li>Master (connect)-> Agent (SSH Slaves Plugin)</li>
+								<li>Agent (connect)-> Master (JNLP)</li>
+								<li><strong>Recommended:</strong> Agent (connect)-> Master (JNLP via Swarm Plugin)</li>
+							</ul>
+							<li>Master can tell agent to do anything</li>
+							<li>Agent can tell agent to do anything (default)</li>
+							<li>Almost all functionality comes from plugins</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<h2>Jenkins Deep Dive</h2>
+					<ul>
+						<li>Managing Jobs</li>
+						<li>Handling Credentials</li>
+						<li>Evolution to Pipeline</li>
+						<li>Cluster Monitoring and Maintenance</li>
+					</ul>
+				</section>
+				<section>
+					<section>
+						<h2>Managing Jobs:<br/>Job Components</h2>
+						<ul>
+							<li class="fragment">Wrappers: Impacts the overall build</li>
+							<li class="fragment">Parameters: User Inputs</li>
+							<li class="fragment">Triggers: The way the job gets started (timer or hook)</li>
+							<li class="fragment">SCM: Integration with source code management (Git, SVN)</li>
+							<li class="fragment">Builders: The steps that occur</li>
+							<li class="fragment">Publishers: Actions that occur after all of the builders have finished</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Managing Jobs:<br/>Best Practices</h2>
+						<ul>
+							<li>Use the Jenkins Job DSL</li>
+							<li>It's a plugin for jenkins that provides a Groovy-based DSL for declaring jobs</li>
+							<li>You can even use it to create other seed jobs</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<h2>Demo</h2>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+				overview: true,
+				transition: 'convex',
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
