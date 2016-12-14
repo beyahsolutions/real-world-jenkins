@@ -15,7 +15,7 @@ To spin up the master and agent, run:
 
 `docker compose up --build -d`
 
-Access the master at http://{{ docker_ip }}:8080/, the username/password is `admin/jenkins4life`.  This can be found in `docker/master/config/init.groovy.override`
+Access the master at http://{{ docker_ip }}:8080/, the username/password is `admin/jenkins4lyfe`.  This can be found in `docker/master/config/init.groovy.override`
 
 To demonstrate scaling, you can use docker-compose:
 
